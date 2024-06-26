@@ -11,12 +11,15 @@ class Home extends StatelessWidget {
           title: const Text('Converter'),
           backgroundColor: const Color.fromARGB(255, 1, 102, 185),
           titleTextStyle: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            children: [
+            children: <Widget>[
               const _ConversionHeader(),
               const SizedBox(height: 20.0),
               const _ConversionInput(),
@@ -45,13 +48,107 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              SingleChildScrollView(
-                child: Column(),
+              const SizedBox(height: 40.0),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  height: 300,
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 1, 102, 185),
+                  ),
+                  child: ListView(),
+                ),
               )
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ConversionHeader extends StatelessWidget {
+  const _ConversionHeader({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Conversion:',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25.0,
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        ConversionRadioOptions()
+      ],
+    );
+  }
+}
+
+class ConversionRadioOptions extends StatefulWidget {
+  const ConversionRadioOptions({
+    super.key,
+  });
+
+  @override
+  State<ConversionRadioOptions> createState() => _ConversionRadioOptionsState();
+}
+
+List<String> conversionOption = ['F to C', 'C to F'];
+
+class _ConversionRadioOptionsState extends State<ConversionRadioOptions> {
+  String currentOption = conversionOption[0];
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        ListTile(
+          title: const Text(
+            'Fahrenheit to Celsius',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: Radio(
+            value: conversionOption[0],
+            groupValue: currentOption,
+            onChanged: (value) {
+              setState(
+                () {
+                  currentOption = value.toString();
+                },
+              );
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text(
+            'Celsius to Fahrenheit',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: Radio(
+            value: conversionOption[1],
+            groupValue: currentOption,
+            onChanged: (value) {
+              setState(
+                () {
+                  currentOption = value.toString();
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -99,39 +196,6 @@ class _ConversionInput extends StatelessWidget {
                 ),
               ),
             )
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class _ConversionHeader extends StatelessWidget {
-  const _ConversionHeader({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Conversion:',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),
-        ),
-        const SizedBox(height: 10.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Fahrenheit to Celsius',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Celsius to Fahrenheit',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
           ],
         )
       ],
