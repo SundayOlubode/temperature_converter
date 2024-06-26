@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+List<String> conversionOption = ['F to C', 'C to F'];
+String currentOption = conversionOption[0];
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -54,7 +57,7 @@ class Home extends StatelessWidget {
                   width: double.infinity,
                   height: 300,
                   decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 1, 102, 185),
+                    color: Color.fromARGB(255, 238, 242, 247),
                   ),
                   child: ListView(),
                 ),
@@ -100,52 +103,52 @@ class ConversionRadioOptions extends StatefulWidget {
   State<ConversionRadioOptions> createState() => _ConversionRadioOptionsState();
 }
 
-List<String> conversionOption = ['F to C', 'C to F'];
-
 class _ConversionRadioOptionsState extends State<ConversionRadioOptions> {
-  String currentOption = conversionOption[0];
-
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        ListTile(
-          title: const Text(
-            'Fahrenheit to Celsius',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+        Expanded(
+          child: ListTile(
+            title: const Text(
+              'Fahrenheit to Celsius',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          leading: Radio(
-            value: conversionOption[0],
-            groupValue: currentOption,
-            onChanged: (value) {
-              setState(
-                () {
-                  currentOption = value.toString();
-                },
-              );
-            },
+            leading: Radio(
+              value: conversionOption[0],
+              groupValue: currentOption,
+              onChanged: (value) {
+                setState(
+                  () {
+                    currentOption = value.toString();
+                  },
+                );
+              },
+            ),
           ),
         ),
-        ListTile(
-          title: const Text(
-            'Celsius to Fahrenheit',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+        Expanded(
+          child: ListTile(
+            title: const Text(
+              'Celsius to Fahrenheit',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          leading: Radio(
-            value: conversionOption[1],
-            groupValue: currentOption,
-            onChanged: (value) {
-              setState(
-                () {
-                  currentOption = value.toString();
-                },
-              );
-            },
+            leading: Radio(
+              value: conversionOption[1],
+              groupValue: currentOption,
+              onChanged: (value) {
+                setState(
+                  () {
+                    currentOption = value.toString();
+                  },
+                );
+              },
+            ),
           ),
         ),
       ],
