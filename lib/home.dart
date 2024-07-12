@@ -27,17 +27,38 @@ class Home extends StatelessWidget {
               children: <Widget>[
                 const ConversionHeader(),
                 const SizedBox(height: 20.0),
-                // const ConversionInput(),
-                const SizedBox(height: 40.0),
                 const ConvertButton(),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 20.0),
                 Container(
                   width: double.infinity,
                   height: 300,
                   decoration: const BoxDecoration(
                     color: Color.fromARGB(255, 238, 242, 247),
                   ),
-                  child: ListView(),
+                  child: ValueListenableBuilder(
+                    valueListenable: ConversionBook(),
+                    builder: (context, conversions, child) {
+                      return ListView.builder(
+                        itemCount: conversions.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final reverseIndex = conversions.length - 1 - index;
+                          final conversion = conversions[reverseIndex];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1.0),
+                            child: ListTile(
+                              title: Text(
+                                conversion.text,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -52,6 +73,7 @@ class Conversion {
   final String type;
   final double value;
   final double convertedValue;
+  final String currentOption;
   final String id;
 
   Conversion({
@@ -59,7 +81,10 @@ class Conversion {
     required this.type,
     required this.value,
     required this.convertedValue,
+    required this.currentOption,
   }) : id = const Uuid().v4();
+
+  String get text => '$currentOption: $value -> $convertedValue';
 }
 
 class ConversionBook extends ValueNotifier<List<Conversion>> {
@@ -74,6 +99,10 @@ class ConversionBook extends ValueNotifier<List<Conversion>> {
     conversions.add(conversion);
     notifyListeners();
   }
+
+  Conversion? conversion({required int atIndex}) {
+    return value.length > atIndex ? value[atIndex] : null;
+  }
 }
 
 class ConvertButton extends StatefulWidget {
@@ -87,16 +116,19 @@ class ConvertButton extends StatefulWidget {
 
 class _ConvertButtonState extends State<ConvertButton> {
   late final TextEditingController _controller;
+  late final TextEditingController _outputController;
 
   @override
   void initState() {
     _controller = TextEditingController();
+    _outputController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _outputController.dispose();
     super.dispose();
   }
 
@@ -130,18 +162,21 @@ class _ConvertButtonState extends State<ConvertButton> {
                   '=',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40.0),
                 ),
-                const SizedBox(
+                SizedBox(
                   width: 150,
                   height: 50,
                   child: TextField(
                     textAlign: TextAlign.center,
                     readOnly: true,
-                    decoration: InputDecoration(
+                    controller: _outputController,
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 214, 212, 212),
                       border:
                           OutlineInputBorder(borderRadius: BorderRadius.zero),
                     ),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20.0),
                   ),
                 ),
               ],
@@ -166,10 +201,13 @@ class _ConvertButtonState extends State<ConvertButton> {
                   print('converted value $convertedValue');
                 }
 
+                _outputController.text = convertedValue.toString();
+
                 final conversion = Conversion(
                   type: currentOption,
                   value: parsedValue,
                   convertedValue: convertedValue,
+                  currentOption: currentOption,
                 );
 
                 ConversionBook().add(conversion: conversion);
@@ -180,8 +218,7 @@ class _ConvertButtonState extends State<ConvertButton> {
             style: ButtonStyle(
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 const RoundedRectangleBorder(
-                  borderRadius: BorderRadius
-                      .zero, // Rectangular shape without rounded corners
+                  borderRadius: BorderRadius.zero,
                 ),
               ),
               minimumSize: WidgetStateProperty.all<Size>(
