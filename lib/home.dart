@@ -12,58 +12,74 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Converter'),
-          backgroundColor: const Color.fromARGB(255, 1, 102, 185),
+          title: const Center(child: Text('Converter')),
+          backgroundColor: const Color.fromARGB(255, 2, 83, 33),
           titleTextStyle: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 30,
           ),
         ),
-        body: Padding(
+        body: const Padding(
           padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                const ConversionHeader(),
-                const SizedBox(height: 20.0),
-                const ConvertButton(),
-                const SizedBox(height: 20.0),
-                Container(
-                  width: double.infinity,
-                  height: 300,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 238, 242, 247),
-                  ),
-                  child: ValueListenableBuilder(
-                    valueListenable: ConversionBook(),
-                    builder: (context, conversions, child) {
-                      return ListView.builder(
-                        itemCount: conversions.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final reverseIndex = conversions.length - 1 - index;
-                          final conversion = conversions[reverseIndex];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 1.0),
-                            child: ListTile(
-                              title: Text(
-                                conversion.text,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
+                ConversionHeader(),
+                SizedBox(height: 20.0),
+                ConvertButton(),
+                SizedBox(height: 20.0),
+                HistoryContainer(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HistoryContainer extends StatelessWidget {
+  const HistoryContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 300,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 123, 192, 150),
+        border: Border.all(
+          color: Colors.white,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: ConversionBook(),
+        builder: (context, conversions, child) {
+          return ListView.builder(
+            itemCount: conversions.length,
+            itemBuilder: (BuildContext context, int index) {
+              final reverseIndex = conversions.length - 1 - index;
+              final conversion = conversions[reverseIndex];
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1.0),
+                child: ListTile(
+                  title: Text(
+                    conversion.text,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -151,8 +167,10 @@ class _ConvertButtonState extends State<ConvertButton> {
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 214, 212, 212),
-                      border:
-                          OutlineInputBorder(borderRadius: BorderRadius.zero),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
                     ),
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20.0),
@@ -172,8 +190,11 @@ class _ConvertButtonState extends State<ConvertButton> {
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 214, 212, 212),
-                      border:
-                          OutlineInputBorder(borderRadius: BorderRadius.zero),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderSide:
+                            BorderSide(color: Color.fromARGB(255, 2, 83, 33)),
+                      ),
                     ),
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20.0),
@@ -218,7 +239,7 @@ class _ConvertButtonState extends State<ConvertButton> {
             style: ButtonStyle(
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
               ),
               minimumSize: WidgetStateProperty.all<Size>(
@@ -228,7 +249,7 @@ class _ConvertButtonState extends State<ConvertButton> {
             child: const Text(
               'CONVERT',
               style: TextStyle(
-                color: Colors.black,
+                color: const Color.fromARGB(255, 2, 83, 33),
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
               ),
