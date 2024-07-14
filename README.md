@@ -1,16 +1,9 @@
-# temperature_converter
+# Temperature Converter: Fahrenheit to Celsius
 
-A new Flutter project.
+# App Demo Video
 
-## Getting Started
+- [Temperature Converter Flutter App Demo](https://www.loom.com/share/d4dec4f977564ba49d9f190156dee871?sid=eeba0aec-9573-4016-8d78-930fe791d5ad)
 
-This project is a starting point for a Flutter application.
+# Author
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [S. Samuel Olubode](https://github.com/SundayOlubode)

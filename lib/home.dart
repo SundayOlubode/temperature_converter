@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+
+import 'models/conversion.dart';
 
 List<String> conversionOption = ['F to C', 'C to F'];
 String currentOption = conversionOption[0];
@@ -21,7 +22,7 @@ class Home extends StatelessWidget {
           ),
         ),
         body: const Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -85,42 +86,6 @@ class HistoryContainer extends StatelessWidget {
   }
 }
 
-class Conversion {
-  final String type;
-  final double value;
-  final double convertedValue;
-  final String currentOption;
-  final String id;
-
-  Conversion({
-    Key? key,
-    required this.type,
-    required this.value,
-    required this.convertedValue,
-    required this.currentOption,
-  }) : id = const Uuid().v4();
-
-  String get text => '$currentOption: $value -> $convertedValue';
-}
-
-class ConversionBook extends ValueNotifier<List<Conversion>> {
-  ConversionBook._sharedInstance() : super([]);
-  static final ConversionBook _shared = ConversionBook._sharedInstance();
-  factory ConversionBook() => _shared;
-
-  int get length => value.length;
-
-  void add({required Conversion conversion}) {
-    final conversions = value;
-    conversions.add(conversion);
-    notifyListeners();
-  }
-
-  Conversion? conversion({required int atIndex}) {
-    return value.length > atIndex ? value[atIndex] : null;
-  }
-}
-
 class ConvertButton extends StatefulWidget {
   const ConvertButton({
     super.key,
@@ -131,19 +96,19 @@ class ConvertButton extends StatefulWidget {
 }
 
 class _ConvertButtonState extends State<ConvertButton> {
-  late final TextEditingController _controller;
+  late final TextEditingController _inputController;
   late final TextEditingController _outputController;
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _inputController = TextEditingController();
     _outputController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _inputController.dispose();
     _outputController.dispose();
     super.dispose();
   }
@@ -163,13 +128,12 @@ class _ConvertButtonState extends State<ConvertButton> {
                   height: 50,
                   child: TextField(
                     textAlign: TextAlign.center,
-                    controller: _controller,
+                    controller: _inputController,
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 214, 212, 212),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(color: Colors.red),
                       ),
                     ),
                     style: const TextStyle(
@@ -192,8 +156,9 @@ class _ConvertButtonState extends State<ConvertButton> {
                       fillColor: Color.fromARGB(255, 214, 212, 212),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide:
-                            BorderSide(color: Color.fromARGB(255, 2, 83, 33)),
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 2, 83, 33),
+                        ),
                       ),
                     ),
                     style: const TextStyle(
@@ -212,14 +177,12 @@ class _ConvertButtonState extends State<ConvertButton> {
               double? convertedValue;
 
               try {
-                parsedValue = double.parse(_controller.text);
+                parsedValue = double.parse(_inputController.text);
 
                 if (currentOption == 'F to C') {
                   convertedValue = fahrenheitToCelsius(parsedValue);
-                  print('converted value $convertedValue');
                 } else {
                   convertedValue = celsiusToFahrenheit(parsedValue);
-                  print('converted value $convertedValue');
                 }
 
                 _outputController.text = convertedValue.toString();
@@ -249,7 +212,7 @@ class _ConvertButtonState extends State<ConvertButton> {
             child: const Text(
               'CONVERT',
               style: TextStyle(
-                color: const Color.fromARGB(255, 2, 83, 33),
+                color: Color.fromARGB(255, 2, 83, 33),
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
               ),
@@ -328,6 +291,7 @@ class _ConversionRadioOptionsState extends State<ConversionRadioOptions> {
                   },
                 );
               },
+              activeColor: const Color.fromARGB(255, 2, 83, 33),
             ),
           ),
         ),
@@ -349,6 +313,7 @@ class _ConversionRadioOptionsState extends State<ConversionRadioOptions> {
                   },
                 );
               },
+              activeColor: const Color.fromARGB(255, 2, 83, 33),
             ),
           ),
         ),
